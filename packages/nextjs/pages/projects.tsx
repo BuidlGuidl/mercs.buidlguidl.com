@@ -14,7 +14,7 @@ const projects = [
     github: "https://github.com/scaffold-eth/scaffold-eth-2",
   },
   {
-    name: "SpeedRunEthereum",
+    name: "Speedrun Ethereum",
     description: "A platform to learn how to build on Ethereum; the superpowers and the gotchas.",
     link: "https://speedrunethereum.com",
     github: "https://github.com/BuidlGuidl/SpeedRunEthereum",
