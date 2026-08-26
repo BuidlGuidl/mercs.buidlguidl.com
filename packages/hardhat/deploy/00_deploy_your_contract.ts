@@ -1,5 +1,3 @@
-//import { builderList } from "../../../builderList";
-//import { ethers } from "ethers";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
@@ -32,12 +30,6 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     // automatically mining the contract deployment transaction. There is no effect on live networks.
     autoMine: true,
   });
-
-  ////const yourContract = await hre.ethers.getContract("SandGardenStreams", deployer);
-
-  //console.log("🫡 adding batch of builders");
-  //const builderStakes = Array(builderList.length).fill(ethers.utils.parseEther("1.5"));
-  //await yourContract.addBatch(builderList, builderStakes);
 };
 
 export default deployYourContract;

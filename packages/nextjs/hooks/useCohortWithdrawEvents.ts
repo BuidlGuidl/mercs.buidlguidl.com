@@ -1,41 +1,26 @@
-import { gql, useQuery } from "urql";
-import contracts from "~~/generated/hardhat_contracts";
-
-const WithdrawalsQuery = gql`
-  query Withdrawls($cohortAddress: String!) {
-    cohortWithdrawals(where: { cohortContractAddress: $cohortAddress }, orderBy: "timestamp", orderDirection: "desc") {
-      items {
-        reason
-        builder
-        amount
-        timestamp
-        id
-      }
-    }
-  }
-`;
+import { useEffect, useState } from "react";
+import { WithdrawEvent, getCohortEvents } from "~~/services/web3/cohortEvents";
 
 export const useCohortWithdrawEvents = () => {
-  const [{ data: newWithdrawEventsData, fetching: isLoadingNew }] = useQuery({
-    query: WithdrawalsQuery,
-    variables: {
-      cohortAddress: contracts[1][0].contracts.SandGardenStreams.address,
-    },
-  });
+  const [data, setData] = useState<WithdrawEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // const [{ data: oldWithdrawEventsData, fetching: isLoadingOld }] = useQuery({
-  //   query: WithdrawalsQuery,
-  //   variables: {
-  //     cohortAddress: contracts[10][0].contracts._SandGardenStreamsOld.address,
-  //   },
-  // });
+  useEffect(() => {
+    let isMounted = true;
 
-  const newContractWithdrawEvents = newWithdrawEventsData?.cohortWithdrawals.items || [];
-  //const oldContractWithdrawEvents = oldWithdrawEventsData?.cohortWithdrawals || [];
+    getCohortEvents()
+      .then(events => {
+        if (isMounted) setData(events.withdrawals);
+      })
+      .catch(error => console.error("Error getting cohort withdraw events: ", error))
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
 
-  const data = [...newContractWithdrawEvents /*, ...oldContractWithdrawEvents*/];
-
-  const isLoading = isLoadingNew; // || isLoadingOld;
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return { data, isLoading };
 };
