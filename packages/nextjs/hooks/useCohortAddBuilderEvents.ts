@@ -1,24 +1,26 @@
-import { gql, useQuery } from "urql";
-import contracts from "~~/generated/hardhat_contracts";
-
-const BuildersQuery = gql`
-  query Builders($cohortAddress: String!) {
-    cohortBuilders(where: { cohortContractAddress: $cohortAddress }, orderBy: "timestamp", orderDirection: "desc") {
-      items {
-        id
-      }
-    }
-  }
-`;
+import { useEffect, useState } from "react";
+import { getCohortEvents } from "~~/services/web3/cohortEvents";
 
 export const useAddBuilderEvents = () => {
-  const [{ data: addBuilderEventsData, fetching: isLoading }] = useQuery({
-    query: BuildersQuery,
-    variables: {
-      cohortAddress: contracts[1][0].contracts.SandGardenStreams.address,
-    },
-  });
+  const [data, setData] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const data = addBuilderEventsData?.cohortBuilders.items || [];
+  useEffect(() => {
+    let isMounted = true;
+
+    getCohortEvents()
+      .then(events => {
+        if (isMounted) setData(events.builders);
+      })
+      .catch(error => console.error("Error getting cohort builder events: ", error))
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return { data, isLoading };
 };

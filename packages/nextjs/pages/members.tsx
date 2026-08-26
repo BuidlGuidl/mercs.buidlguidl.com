@@ -32,9 +32,8 @@ const Members: NextPage = () => {
   const { data: addBuilderEvents, isLoading: isLoadingBuilderEvents } = useAddBuilderEvents();
 
   useEffect(() => {
-    if (addBuilderEvents && addBuilderEvents.length > 0) {
-      const fetchedBuilderList = addBuilderEvents.map((event: any) => event.id.split("-")[0]);
-      setBuilderList(fetchedBuilderList);
+    if (addBuilderEvents.length > 0) {
+      setBuilderList(addBuilderEvents);
     }
   }, [addBuilderEvents]);
 

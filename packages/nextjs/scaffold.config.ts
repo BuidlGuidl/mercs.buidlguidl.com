@@ -30,7 +30,7 @@ const scaffoldConfig = {
 
   contracts: {
     SandGardenStreams: {
-      fromBlock: 1,
+      fromBlock: 20291636,
     },
   },
 } satisfies ScaffoldConfig;
